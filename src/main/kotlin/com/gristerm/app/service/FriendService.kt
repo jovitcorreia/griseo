@@ -8,21 +8,21 @@ import org.springframework.stereotype.Service
 
 @Service
 class FriendService {
-    @Autowired lateinit var userService: UserService
+  @Autowired lateinit var userService: UserService
 
-    fun inviteFriend(inviterId: String, invitedId: String) {
-        val inviter = userService.retrieveUserById(inviterId).get()
-        val invited = userService.retrieveUserById(inviterId).get()
-        invited.notifications.add(FriendInviteNotification(inviter.toFriendModel()))
-        userService.persistUser(invited)
-    }
+  fun inviteFriend(inviterId: String, invitedId: String) {
+    val inviter = userService.retrieveUserById(inviterId).get()
+    val invited = userService.retrieveUserById(inviterId).get()
+    invited.notifications.add(FriendInviteNotification(inviter.toFriendModel()))
+    userService.persistUser(invited)
+  }
 
-    fun addFriend(accepterId: String, requesterId: String): UserModel {
-        val accepter = userService.retrieveUserById(accepterId).get()
-        val requester = userService.retrieveUserById(requesterId).get()
-        requester.friends.add(accepter)
-        userService.persistUser(requester)
-        accepter.friends.add(requester)
-        return userService.persistUser(accepter)
-    }
+  fun addFriend(accepterId: String, requesterId: String): UserModel {
+    val accepter = userService.retrieveUserById(accepterId).get()
+    val requester = userService.retrieveUserById(requesterId).get()
+    requester.friends.add(accepter)
+    userService.persistUser(requester)
+    accepter.friends.add(requester)
+    return userService.persistUser(accepter)
+  }
 }

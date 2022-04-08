@@ -21,28 +21,28 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/users")
 class UserController(@Autowired val userService: UserService) {
-    @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MOD')")
-    fun indexUsers(
-        authentication: Authentication,
-        @PageableDefault(sort = ["createdDate"], direction = Sort.Direction.ASC) pageable: Pageable
-    ): ResponseEntity<Page<UserResponse>> {
-        val userPage: Page<UserModel> = userService.indexUsers(pageable)
-        return ResponseEntity.status(CREATED).body(userPage.map { it.toUserResponse() })
-    }
+  @GetMapping
+  @PreAuthorize("hasAnyRole('ADMIN', 'MOD')")
+  fun indexUsers(
+      authentication: Authentication,
+      @PageableDefault(sort = ["createdDate"], direction = Sort.Direction.ASC) pageable: Pageable
+  ): ResponseEntity<Page<UserResponse>> {
+    val userPage: Page<UserModel> = userService.indexUsers(pageable)
+    return ResponseEntity.status(CREATED).body(userPage.map { it.toUserResponse() })
+  }
 
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('USER')")
-    fun retrieveUserById(@PathVariable id: String): ResponseEntity<UserResponse> {
-        val userModel: UserModel = userService.retrieveUserById(id).get()
-        return ResponseEntity.status(OK).body(userModel.toUserResponse())
-    }
+  @GetMapping("/{id}")
+  @PreAuthorize("hasAnyRole('USER')")
+  fun retrieveUserById(@PathVariable id: String): ResponseEntity<UserResponse> {
+    val userModel: UserModel = userService.retrieveUserById(id).get()
+    return ResponseEntity.status(OK).body(userModel.toUserResponse())
+  }
 
-    @DeleteMapping
-    @PreAuthorize("hasAnyRole('USER')")
-    fun deleteUserById(authentication: Authentication): ResponseEntity<String> {
-        val userCredentials: UserCredentials = authentication.principal as UserCredentials
-        userService.deleteUserById(userCredentials.id)
-        return ResponseEntity.status(OK).body("${userCredentials.id} deleted successfully")
-    }
+  @DeleteMapping
+  @PreAuthorize("hasAnyRole('USER')")
+  fun deleteUserById(authentication: Authentication): ResponseEntity<String> {
+    val userCredentials: UserCredentials = authentication.principal as UserCredentials
+    userService.deleteUserById(userCredentials.id)
+    return ResponseEntity.status(OK).body("${userCredentials.id} deleted successfully")
+  }
 }

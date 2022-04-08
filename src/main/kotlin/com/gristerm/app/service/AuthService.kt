@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service
 
 @Service
 class AuthService {
-    @Autowired lateinit var passwordEncoder: PasswordEncoder
-    @Autowired lateinit var userRepository: UserRepository
+  @Autowired lateinit var passwordEncoder: PasswordEncoder
+  @Autowired lateinit var userRepository: UserRepository
 
-    fun createUser(signUpRequest: SignUpRequest): UserModel {
-        val userModel = signUpRequest.toUserModel()
-        userModel.password = passwordEncoder.encode(userModel.password)
-        userModel.lastModifiedDate = userModel.createdDate
-        return userRepository.save(userModel)
-    }
+  fun createUser(signUpRequest: SignUpRequest): UserModel {
+    val userModel = signUpRequest.toUserModel()
+    userModel.password = passwordEncoder.encode(userModel.password)
+    userModel.lastModifiedDate = userModel.createdDate
+    return userRepository.save(userModel)
+  }
 }

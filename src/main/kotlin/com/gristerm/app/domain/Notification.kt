@@ -4,15 +4,15 @@ import com.gristerm.app.domain.NotificationType.FRIEND_INVITE
 import java.time.LocalDateTime
 
 interface NotificationContract {
-    val content: String
-    var isDecided: Boolean?
-    val type: NotificationType
-    val sentIn: LocalDateTime
+  val content: String
+  var isDecided: Boolean?
+  val type: NotificationType
+  val sentIn: LocalDateTime
 }
 
-enum class NotificationType() {
-    FRIEND_INVITE,
-    GAME_INVITE
+enum class NotificationType {
+  FRIEND_INVITE,
+  GAME_INVITE
 }
 
 data class FriendInviteNotification(

@@ -43,14 +43,14 @@ class AuthFilterConfig : OncePerRequestFilter() {
                         tokenProvider.subject(token).let { id ->
                             userDetails.loadUserById(id.orEmpty())
                         }
-                    val auth =
+                    val authentication =
                         UsernamePasswordAuthenticationToken(
                             user,
                             null,
                             user.authorities ?: throw SecurityException()
                         )
-                    auth.details = WebAuthenticationDetailsSource().buildDetails(request)
-                    SecurityContextHolder.getContext().authentication = auth
+                    authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
+                    SecurityContextHolder.getContext().authentication = authentication
                 }
             }
             chain.doFilter(request, response)

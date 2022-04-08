@@ -20,26 +20,23 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/auth")
 class AuthController {
-    @Autowired lateinit var authService: AuthService
-    @Autowired lateinit var authenticationManager: AuthenticationManager
-    @Autowired lateinit var tokenProvider: TokenProvider
+  @Autowired lateinit var authService: AuthService
+  @Autowired lateinit var authenticationManager: AuthenticationManager
+  @Autowired lateinit var tokenProvider: TokenProvider
 
-    @PostMapping("/login")
-    fun signIn(
-        @RequestBody @Validated signInRequest: SignInRequest
-    ): ResponseEntity<TokenResponse> {
-        val authentication =
-            authenticationManager.authenticate(
-                UsernamePasswordAuthenticationToken(signInRequest.username, signInRequest.password)
-            )
-        SecurityContextHolder.getContext().authentication = authentication
-        val token: String = tokenProvider.generate(authentication)
-        return ResponseEntity.status(HttpStatus.OK).body(TokenResponse(token))
-    }
+  @PostMapping("/login")
+  fun signIn(@RequestBody @Validated signInRequest: SignInRequest): ResponseEntity<TokenResponse> {
+    val authentication =
+        authenticationManager.authenticate(
+            UsernamePasswordAuthenticationToken(signInRequest.username, signInRequest.password))
+    SecurityContextHolder.getContext().authentication = authentication
+    val token: String = tokenProvider.generate(authentication)
+    return ResponseEntity.status(HttpStatus.OK).body(TokenResponse(token))
+  }
 
-    @PostMapping("/signup")
-    fun signUp(@RequestBody @Validated signUpRequest: SignUpRequest): ResponseEntity<UserResponse> {
-        val userModel = authService.createUser(signUpRequest)
-        return ResponseEntity.status(HttpStatus.OK).body(userModel.toUserResponse())
-    }
+  @PostMapping("/signup")
+  fun signUp(@RequestBody @Validated signUpRequest: SignUpRequest): ResponseEntity<UserResponse> {
+    val userModel = authService.createUser(signUpRequest)
+    return ResponseEntity.status(HttpStatus.OK).body(userModel.toUserResponse())
+  }
 }

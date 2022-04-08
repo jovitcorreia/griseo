@@ -21,8 +21,7 @@ fun UserModel.toUserResponse() =
         notifications,
         friends.map { it.toFriendResponse() }.toSet(),
         createdDate,
-        lastModifiedDate
-    )
+        lastModifiedDate)
 
 fun UserModel.toFriendModel() = FriendModel(id, username)
 
