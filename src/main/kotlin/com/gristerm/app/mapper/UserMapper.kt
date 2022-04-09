@@ -27,4 +27,4 @@ fun UserModel.toFriendModel() = FriendModel(id, username)
 
 fun UserModel.toFriendResponse() = FriendResponse(id, username, isOnline)
 
-fun UserModel.toUserCredentials() = UserCredentials(id, username, password, isActive)
+fun UserModel.toUserCredentials() = UserCredentials(id, username, password, isActive, roles)

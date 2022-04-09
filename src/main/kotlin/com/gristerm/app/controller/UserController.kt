@@ -32,7 +32,6 @@ class UserController(@Autowired val userService: UserService) {
   }
 
   @GetMapping("/{id}")
-  @PreAuthorize("hasAnyRole('USER')")
   fun retrieveUserById(@PathVariable id: String): ResponseEntity<UserResponse> {
     val userModel: UserModel = userService.retrieveUserById(id).get()
     return ResponseEntity.status(OK).body(userModel.toUserResponse())

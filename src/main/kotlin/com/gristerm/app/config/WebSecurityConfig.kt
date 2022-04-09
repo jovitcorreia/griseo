@@ -2,8 +2,6 @@ package com.gristerm.app.config
 
 import com.gristerm.app.mapper.toUserCredentials
 import com.gristerm.app.repository.UserRepository
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -17,26 +15,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.core.GrantedAuthorityDefaults
 import org.springframework.security.config.http.SessionCreationPolicy.STATELESS
-import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
-
-@Component
-class AuthEntryPoint : AuthenticationEntryPoint {
-  override fun commence(
-      request: HttpServletRequest?,
-      response: HttpServletResponse,
-      ex: AuthenticationException
-  ) {
-    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "unauthorized")
-  }
-}
 
 @Primary
 @Service
