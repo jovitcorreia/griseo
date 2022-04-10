@@ -2,21 +2,18 @@ jwt:
   expiration: 604800
   secret: t7w!z%C*F-JaNdRgUkXp2s5v8x/A?D(G+KbPeShVmYq3t6w9z$B&E)H@McQfTjWn
 
-server:
-  error:
-    include-message: always
+logging:
+  level:
+    com.gristerm.app: DEBUG
+    org.springframework: WARN
 
 spring:
   data:
     mongodb:
       authentication-database: admin
       auto-index-creation: true
-      database: gristerm
+      database: test
       host: localhost
       password: pwd
       port: 27017
       username: root
-
-logging:
-  level:
-    org.springframework.security: DEBUG

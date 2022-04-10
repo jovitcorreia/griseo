@@ -1,0 +1,30 @@
+jwt:
+  expiration: 604800
+  secret: t7w!z%C*F-JaNdRgUkXp2s5v8x/A?D(G+KbPeShVmYq3t6w9z$B&E)H@McQfTjWn
+
+logging:
+  level:
+    com.gristerm.app: DEBUG
+    org.springframework: WARN
+
+server:
+  compression:
+    enabled: true
+    mime-types: application/json
+  error:
+    include-message: always
+  port: 8080
+
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      auto-index-creation: true
+      database: gristerm
+      host: localhost
+      password: pwd
+      port: 27017
+      username: root
+  output:
+    ansi:
+      enabled: always

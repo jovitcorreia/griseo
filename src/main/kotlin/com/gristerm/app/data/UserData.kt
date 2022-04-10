@@ -10,7 +10,7 @@ class SignInRequest(val username: String? = null, val password: String? = null)
 
 data class SignUpRequest(
     @field:Size(min = 4, max = 16) val username: String,
-    @field:Size(min = 8) val password: String,
+    @field:Size(min = 8, max = 512) val password: String,
     @field:Email val email: String
 )
 

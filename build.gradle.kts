@@ -3,15 +3,16 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.6.6"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("io.freefair.lombok") version "5.3.0"
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
-    kotlin("plugin.lombok") version "1.6.20"
+    jacoco
 }
 
 group = "com.gristerm"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
+
+val testCompile: Configuration by configurations.creating
 
 repositories {
     mavenCentral()
@@ -29,6 +30,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
+    testCompile("com.intuit.karate:karate-apache:0.9.6")
+    testImplementation("com.intuit.karate:karate-junit5:1.1.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 }
@@ -42,4 +45,10 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    systemProperties(System.getProperties().mapKeys { it.key as String })
+    systemProperty("karate.options", System.getProperty("karate.options"))
+    systemProperty("karate.env", System.getProperty("karate.env"))
+    outputs.upToDateWhen { false }
+    testLogging.showStandardStreams = true
+    finalizedBy("jacocoTestReport")
 }
