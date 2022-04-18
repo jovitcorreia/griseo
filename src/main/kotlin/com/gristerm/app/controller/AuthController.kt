@@ -1,7 +1,7 @@
 package com.gristerm.app.controller
 
 import com.gristerm.app.config.TokenProvider
-import com.gristerm.app.data.SignInRequest
+import com.gristerm.app.data.LoginRequest
 import com.gristerm.app.data.SignUpRequest
 import com.gristerm.app.data.TokenResponse
 import com.gristerm.app.data.UserResponse
@@ -17,18 +17,18 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 @CrossOrigin(origins = ["*"])
-@RestController
 @RequestMapping("/auth")
+@RestController
 class AuthController {
   @Autowired lateinit var authService: AuthService
   @Autowired lateinit var authenticationManager: AuthenticationManager
   @Autowired lateinit var tokenProvider: TokenProvider
 
   @PostMapping("/login")
-  fun signIn(@RequestBody @Validated signInRequest: SignInRequest): ResponseEntity<TokenResponse> {
+  fun signIn(@RequestBody @Validated loginRequest: LoginRequest): ResponseEntity<TokenResponse> {
     val authentication =
         authenticationManager.authenticate(
-            UsernamePasswordAuthenticationToken(signInRequest.username, signInRequest.password))
+            UsernamePasswordAuthenticationToken(loginRequest.username, loginRequest.password))
     SecurityContextHolder.getContext().authentication = authentication
     val token: String = tokenProvider.generate(authentication)
     return ResponseEntity.status(HttpStatus.OK).body(TokenResponse(token))

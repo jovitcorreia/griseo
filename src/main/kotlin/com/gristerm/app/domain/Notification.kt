@@ -12,7 +12,7 @@ interface NotificationContract {
 
 enum class NotificationType {
   FRIEND_INVITE,
-  GAME_INVITE
+  TABLE_INVITE
 }
 
 data class FriendInviteNotification(
