@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.context.request.ServletWebRequest
 
 interface ResponseContract {
-  val time: LocalDateTime
-  val client: String
+  val timestamp: LocalDateTime
+  val remoteAddress: String
   val path: String
   val method: HttpMethod?
   val body: Any
@@ -18,12 +18,12 @@ interface ResponseContract {
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 data class ErrorResponse(val status: HttpStatus, @JsonIgnore val request: ServletWebRequest) :
     ResponseContract {
-  override val time: LocalDateTime = LocalDateTime.now()
-  override val client: String = request.request.remoteAddr
+  override val timestamp: LocalDateTime = LocalDateTime.now()
+  override val remoteAddress: String = request.request.remoteAddr
   override val path: String = request.request.requestURI
   override val method: HttpMethod? = request.httpMethod
   override val body: MutableMap<String, String?> = HashMap()
   override fun toString(): String {
-    return "$client got $status on $method $path with $body"
+    return "$remoteAddress got $status on $method $path with $body"
   }
 }

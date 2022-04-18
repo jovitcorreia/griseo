@@ -23,25 +23,31 @@ class ErrorController {
   }
 
   @ExceptionHandler(AuthenticationException::class)
-  fun handleBadRequest(ex: AuthenticationException, req: ServletWebRequest): ErrorResponse {
+  fun handleBadRequest(
+      exception: AuthenticationException,
+      request: ServletWebRequest
+  ): ErrorResponse {
     val response: ErrorResponse
-    if (ex.message?.contains("denied") == true) {
-      response = ErrorResponse(FORBIDDEN, req)
-      req.response?.status = FORBIDDEN.value()
+    if (exception.message?.contains("denied") == true) {
+      response = ErrorResponse(FORBIDDEN, request)
+      request.response?.status = FORBIDDEN.value()
     } else {
-      response = ErrorResponse(UNAUTHORIZED, req)
-      req.response?.status = UNAUTHORIZED.value()
+      response = ErrorResponse(UNAUTHORIZED, request)
+      request.response?.status = UNAUTHORIZED.value()
     }
-    ex.message?.let { response.body.put("user", it) }
+    exception.message?.let { response.body.put("user", it) }
     log.warn(response.toString())
     return response
   }
 
   @ExceptionHandler(MethodArgumentNotValidException::class)
   @ResponseStatus(BAD_REQUEST)
-  fun handleBadRequest(ex: MethodArgumentNotValidException, req: ServletWebRequest): ErrorResponse {
-    val response = ErrorResponse(BAD_REQUEST, req)
-    ex.bindingResult.allErrors.forEach { error: ObjectError ->
+  fun handleBadRequest(
+      exception: MethodArgumentNotValidException,
+      request: ServletWebRequest
+  ): ErrorResponse {
+    val response = ErrorResponse(BAD_REQUEST, request)
+    exception.bindingResult.allErrors.forEach { error: ObjectError ->
       response.body[(error as FieldError).field] = error.defaultMessage
     }
     log.warn(response.toString())
@@ -50,26 +56,26 @@ class ErrorController {
 
   @ExceptionHandler(DuplicateKeyException::class)
   @ResponseStatus(CONFLICT)
-  fun handleConflict(ex: DuplicateKeyException, req: ServletWebRequest): ErrorResponse {
-    val response = ErrorResponse(CONFLICT, req)
-    ex.message?.let { getDupKey(it) }?.let { response.body.putAll(it) }
+  fun handleConflict(exception: DuplicateKeyException, request: ServletWebRequest): ErrorResponse {
+    val response = ErrorResponse(CONFLICT, request)
+    exception.message?.let { getDupKey(it) }?.let { response.body.putAll(it) }
     log.warn(response.toString())
     return response
   }
 
   @ExceptionHandler(NoSuchElementException::class)
   @ResponseStatus(NOT_FOUND)
-  fun handleNotFound(ex: NoSuchElementException, req: ServletWebRequest): ErrorResponse {
-    val response = ErrorResponse(NOT_FOUND, req)
+  fun handleNotFound(exception: NoSuchElementException, request: ServletWebRequest): ErrorResponse {
+    val response = ErrorResponse(NOT_FOUND, request)
     log.warn(response.toString())
     return response
   }
 
   @ExceptionHandler(JwtException::class)
   @ResponseStatus(UNAUTHORIZED)
-  fun handleUnauthorized(ex: JwtException, req: ServletWebRequest): ErrorResponse {
-    val response = ErrorResponse(UNAUTHORIZED, req)
-    ex.message?.let { response.body.put("token", it) }
+  fun handleUnauthorized(exception: JwtException, request: ServletWebRequest): ErrorResponse {
+    val response = ErrorResponse(UNAUTHORIZED, request)
+    exception.message?.let { response.body.put("token", it) }
     log.warn(response.toString())
     return response
   }
