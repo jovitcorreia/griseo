@@ -22,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.stereotype.Service
 
+val WHITE_LIST = arrayOf("/auth/**", "/v3/api-docs/**", "/swagger-ui/**")
+
 @Primary
 @Service
 class UserDetailsServiceImpl : UserDetailsService {
@@ -54,7 +56,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         ?.csrf { it.disable() }
         ?.exceptionHandling { it.authenticationEntryPoint((authEntryPoint)) }
         ?.sessionManagement { it.sessionCreationPolicy(STATELESS) }
-        ?.authorizeRequests { it.antMatchers("/auth/**").permitAll() }
+        ?.authorizeRequests { it.antMatchers(*WHITE_LIST).permitAll() }
         ?.authorizeRequests { it.anyRequest().authenticated() }
     http?.addFilterBefore(
         authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter::class.java)
