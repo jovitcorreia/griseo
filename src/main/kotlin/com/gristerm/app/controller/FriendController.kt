@@ -6,24 +6,33 @@ import com.gristerm.app.service.FriendService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus.OK
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.Authentication
+import org.springframework.web.bind.annotation.*
 
 @CrossOrigin(origins = ["*"])
+@RequestMapping("/friend")
 @RestController
 class FriendController(@Autowired val friendService: FriendService) {
-  @PostMapping("/invite/{id}")
-  fun inviteFriend(@PathVariable id: String): ResponseEntity<String> {
-    val requester = "624f880d46abdb741ac6686e"
-    friendService.inviteFriend(requester, id)
-    return ResponseEntity.status(OK).body("friend invitation sent successfully")
+  @PostMapping("/accept/{acceptedId}")
+  @PreAuthorize("hasAnyRole('USER')")
+  fun accept(
+      authentication: Authentication,
+      @PathVariable acceptedId: String
+  ): ResponseEntity<UserResponse> {
+    val accepterId = authentication.principal.toString()
+    return ResponseEntity.status(OK)
+        .body(friendService.accept(accepterId, acceptedId).toUserResponse())
   }
 
-  @PostMapping("/add/{id}")
-  fun addFriend(@PathVariable id: String): ResponseEntity<UserResponse> {
-    val accepter = "624f880d46abdb741ac6686e"
-    return ResponseEntity.status(OK).body(friendService.addFriend(accepter, id).toUserResponse())
+  @PostMapping("/invite/{invitedId}")
+  @PreAuthorize("hasAnyRole('USER')")
+  fun invite(
+      authentication: Authentication,
+      @PathVariable invitedId: String
+  ): ResponseEntity<String> {
+    val requesterId = authentication.principal.toString()
+    friendService.invite(requesterId, invitedId)
+    return ResponseEntity.status(OK).body("friend invitation sent successfully")
   }
 }

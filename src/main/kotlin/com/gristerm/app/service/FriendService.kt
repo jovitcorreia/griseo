@@ -10,19 +10,19 @@ import org.springframework.stereotype.Service
 class FriendService {
   @Autowired lateinit var userService: UserService
 
-  fun inviteFriend(inviterId: String, invitedId: String) {
-    val inviter = userService.retrieveUserById(inviterId).get()
-    val invited = userService.retrieveUserById(inviterId).get()
-    invited.notifications.add(FriendInviteNotification(inviter.toFriendModel()))
-    userService.persistUser(invited)
+  fun accept(accepterId: String, requesterId: String): UserModel {
+    val accepter = userService.retrieve(accepterId).get()
+    val requester = userService.retrieve(requesterId).get()
+    requester.friends.add(accepter)
+    userService.persist(requester)
+    accepter.friends.add(requester)
+    return userService.persist(accepter)
   }
 
-  fun addFriend(accepterId: String, requesterId: String): UserModel {
-    val accepter = userService.retrieveUserById(accepterId).get()
-    val requester = userService.retrieveUserById(requesterId).get()
-    requester.friends.add(accepter)
-    userService.persistUser(requester)
-    accepter.friends.add(requester)
-    return userService.persistUser(accepter)
+  fun invite(inviterId: String, invitedId: String) {
+    val inviter = userService.retrieve(inviterId).get()
+    val invited = userService.retrieve(invitedId).get()
+    invited.notifications.add(FriendInviteNotification(inviter.toFriendModel()))
+    userService.persist(invited)
   }
 }
