@@ -18,11 +18,7 @@
 .springBeans
 .sts4-cache
 .vscode/
-/.nb-gradle/
 /dist/
-/nbbuild/
-/nbdist/
-/nbproject/private/
 HELP.md
 bin/
 build/
